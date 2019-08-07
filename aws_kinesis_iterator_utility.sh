@@ -13,8 +13,13 @@ declare SHARDS=($(aws kinesis list-shards --stream-name $KINESIS_STREAM_NAME --q
 
 declare MAX_INDEX=$((SHARDS_COUNT-1))
 #echo "MAX_INDEX=$MAX_INDEX"
-
+declare SHARD_ITERATOR_ID="-"
+declare SHARD_ID="-"
 for i in `seq 0 $MAX_INDEX`
 do
-   echo "Shard # $(($i+1)): ${SHARDS[$i]}"
+   # Trim the white spaces
+   SHARD_ID=`echo "${SHARDS[$i]}" | sed -e 's/^[[:space:]]*//'`
+   echo "Shard # $(($i+1)): ${SHARD_ID}"
+   SHARD_ITERATOR_ID=$(aws kinesis get-shard-iterator --stream-name $KINESIS_STREAM_NAME --shard-id "$SHARD_ID" --shard-iterator-type TRIM_HORIZON --query ShardIterator)
+   echo "Shard Iterator: $SHARD_ITERATOR_ID"
 done

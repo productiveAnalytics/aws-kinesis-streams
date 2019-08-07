@@ -1,2 +1,2 @@
 # aws-kinesis-streams
-AWS Kinesis Streams
+Utility to iterate thru shards of selected AWS Kinesis Stream
